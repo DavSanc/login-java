@@ -1,2 +1,3 @@
 com\mycompany\login\resources\JakartaEE11Resource.class
 com\mycompany\login\JakartaRestConfiguration.class
+com\mycompany\login\servlets\LoginServlet.class
