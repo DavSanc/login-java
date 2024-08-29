@@ -40,9 +40,15 @@ public class LoginServlet extends HttpServlet {
             throws ServletException, IOException {
         String usuario = request.getParameter("usuario");
         String contraseña = request.getParameter("contraseña");
-
-
-        String url = "jdbc:mysql://localhost:3306/Jdbctest"; //Url de la base de datos
+        
+        try {
+            Class.forName("com.mysql.cj.jdbc.Driver");
+        } catch (ClassNotFoundException ex) {
+            Logger.getLogger(LoginServlet.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        
+        
+        String url = "jdbc:mysql://localhost:3306/servletlogin"; //Url de la base de datos
         Connection conexion; //Crear constante para almacenar conexion
         Statement statement;
         ResultSet rs;
@@ -51,9 +57,15 @@ public class LoginServlet extends HttpServlet {
             conexion = DriverManager.getConnection(url, "root", "");
             
             statement = conexion.createStatement();
-            rs = statement.executeQuery("SELECT * FROM usuarios");
-            while (rs.next()) {
-                System.out.println(rs.getString("nombre"));
+            rs = statement.executeQuery("SELECT * FROM `usuarios` WHERE `usuario` = '" +
+                    
+                    usuario+"' AND `contrasena` = '" + contraseña +"'");
+            if (rs.next()) {
+                request.getSession().setAttribute("usuario", usuario );
+                response.sendRedirect("panel.jsp");
+            } else{
+            
+                response.sendRedirect("index.html");
             }
         } catch (SQLException ex) {
             Logger.getLogger(LoginServlet.class.getName()).log(Level.SEVERE, null, ex);
